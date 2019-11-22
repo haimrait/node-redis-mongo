@@ -1,0 +1,15 @@
+{
+  "name": "node-redis-mongo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/haimrait/node-redis-mongo.git",
+  "author": "DESKTOP-MOOGR13\\haimr <haimrait@gmail.com>",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
