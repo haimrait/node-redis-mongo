@@ -1,3 +1,4 @@
 module.exports = {
-  mongoURI: "mongo url needed"
+  mongoURI: "Mongo URL",
+  redisURI: "Redis URL"
 };

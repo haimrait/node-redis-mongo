@@ -5,9 +5,9 @@ module.exports = app => {
   app.get("/api/books", async (req, res) => {
     let books;
     if (req.query.author) {
-      books = await Book.find({ author: req.query.author });
+      books = await Book.find({ author: req.query.author }).cache();
     } else {
-      books = await Book.find();
+      books = await Book.find().cache();
     }
 
     res.send(books);
