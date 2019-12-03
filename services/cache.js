@@ -4,11 +4,13 @@ const util = require("util");
 const keys = require("../config/keys");
 
 const client = redis.createClient(keys.redisURI);
-client.get = util.promisify(client.get);
+client.hget = util.promisify(client.hget);
 const exec = mongoose.Query.prototype.exec;
 
-mongoose.Query.prototype.cache = function(options = {}) {
+mongoose.Query.prototype.cache = function(options = { time: 60 }) {
   this.useCache = true;
+  this.time = options.time;
+  this.hashKey = JSON.stringify(options.key || this.mongooseCollection.name);
 
   return this;
 };
@@ -18,13 +20,11 @@ mongoose.Query.prototype.exec = async function() {
     return await exec.apply(this, arguments);
   }
 
-  const key = JSON.stringify(
-    Object.assign({}, this.getQuery(), {
-      collection: this.mongooseCollection.name
-    })
-  );
+  const key = JSON.stringify({
+    ...this.getQuery()
+  });
 
-  const cacheValue = await client.get(key);
+  const cacheValue = await client.hget(this.hashKey, key);
 
   if (cacheValue) {
     const doc = JSON.parse(cacheValue);
@@ -36,8 +36,16 @@ mongoose.Query.prototype.exec = async function() {
   }
 
   const result = await exec.apply(this, arguments);
-  client.set(key, JSON.stringify(result), "EX", 120);
+  console.log(this.time);
+  client.hset(this.hashKey, key, JSON.stringify(result));
+  client.expire(this.hashKey, 10);
 
   console.log("Response from MongoDB");
   return result;
+};
+
+module.exports = {
+  clearKey(hashKey) {
+    client.del(JSON.stringify(hashKey));
+  }
 };
