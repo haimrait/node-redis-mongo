@@ -38,7 +38,7 @@ mongoose.Query.prototype.exec = async function() {
   const result = await exec.apply(this, arguments);
   console.log(this.time);
   client.hset(this.hashKey, key, JSON.stringify(result));
-  client.expire(this.hashKey, 10);
+  client.expire(this.hashKey, this.time);
 
   console.log("Response from MongoDB");
   return result;
