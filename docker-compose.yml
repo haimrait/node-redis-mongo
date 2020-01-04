@@ -1,0 +1,23 @@
+version: "3"
+services:
+  mongo:
+    image: "mongo:latest"
+    ports:
+      - "27017:27017"
+  redis:
+    image: "redis:latest"
+  server:
+    ports:
+      - "5000:5000"
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MONGO_DB_NAME=library
+      - MONGO_PORT=27017
+      - MONGO_HOST=mongo
+    links:
+      - mongo
+      - redis
