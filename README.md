@@ -1,6 +1,9 @@
 # node-redis-mongo
 
-A simple example of an express server with mongo, mongoose and Redis
+A simple example of an express server with mongo, mongoose and Redis.
+
+more information in my blog post:
+https://medium.com/@haimrait/how-to-add-a-redis-cache-layer-to-mongoose-in-node-js-a9729181ad69
 
 ## Installation
 ```bash
